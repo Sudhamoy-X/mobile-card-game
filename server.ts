@@ -124,11 +124,17 @@ io.on('connection', socket => {
 });
 
 // Mount Vite in development or serve static files in production
-const isProduction = process.env.NODE_ENV === 'production';
 const distPath = path.resolve(__dirname, 'dist');
+const hasDist = fs.existsSync(distPath);
+const isProduction = process.env.NODE_ENV === 'production' || hasDist;
 
 async function startServer() {
-  if (!isProduction) {
+  if (isProduction && hasDist) {
+    app.use(express.static(distPath));
+    app.get('*', (_req, res) => {
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+  } else {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -145,16 +151,12 @@ async function startServer() {
         next(e);
       }
     });
-  } else {
-    app.use(express.static(distPath));
-    app.get('*', (_req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
-    });
   }
 
-  const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-  server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server listening on http://0.0.0.0:${PORT}`);
+  const PORT = Number(process.env.PORT) || 3000;
+  const HOST = '0.0.0.0';
+  server.listen(PORT, HOST, () => {
+    console.log(`Server listening on http://${HOST}:${PORT}`);
   });
 }
 
