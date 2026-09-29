@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #090a0f;
+    --bg-secondary: #12151d;
+    --bg-surface: #161924;
+    --bg-felt: #0d1117;
+    --gold-primary: #d4af37;
+    --gold-light: #f5cf68;
+    --gold-dark: #99741e;
+    --gold-border: rgba(212, 175, 55, 0.35);
+    --gold-glow: rgba(212, 175, 55, 0.2);
+    --text-primary: #f5f5f0;
+    --text-secondary: #9da3af;
+    --text-muted: #6b7280;
+  }
+
+  .theme-light {
+    --bg-primary: #f3f4f6;
+    --bg-secondary: #ffffff;
+    --bg-surface: #e5e7eb;
+    --bg-felt: #e8ecf1;
+    --gold-primary: #b8860b;
+    --gold-light: #d4af37;
+    --gold-dark: #8c6708;
+    --gold-border: rgba(184, 134, 11, 0.4);
+    --gold-glow: rgba(184, 134, 11, 0.15);
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #6b7280;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .font-display {
+    font-family: 'Cinzel', serif;
+  }
+}
+
+/* Luxury Obsidian Gold Metallic Gradients & Borders */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #fff2cc 0%, #d4af37 40%, #f3ba2f 70%, #aa771c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(135deg, #f5cf68 0%, #d4af37 50%, #99741e 100%);
+}
+
+.gold-gradient-border {
+  border-image: linear-gradient(135deg, #f5cf68, #d4af37, #99741e) 1;
+}
+
+.table-felt-pattern {
+  background-color: var(--bg-felt);
+  background-image: 
+    radial-gradient(ellipse at center, rgba(212, 175, 55, 0.04) 0%, transparent 75%),
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 32px 32px, 32px 32px;
+}
+
+/* Card 3D Depth */
+.card-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.card-playable-glow {
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.55), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Hide scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

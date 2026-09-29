@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.MobileCardGame" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/metallic_gold</item>
+        <item name="colorPrimaryVariant">@color/charcoal_surface</item>
+        <item name="colorOnPrimary">@color/obsidian_black</item>
+        <item name="android:statusBarColor">@color/obsidian_black</item>
+        <item name="android:navigationBarColor">@color/obsidian_black</item>
+    </style>
+
+    <style name="Theme.MobileCardGame.Fullscreen" parent="Theme.MobileCardGame">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+</resources>

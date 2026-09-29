@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="obsidian_black">#090A0F</color>
+    <color name="charcoal_surface">#12151D</color>
+    <color name="metallic_gold">#D4AF37</color>
+    <color name="metallic_gold_light">#F5CF68</color>
+    <color name="warm_white">#F5F5F0</color>
+</resources>

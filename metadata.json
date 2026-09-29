@@ -1,0 +1,6 @@
+{
+  "name": "Mobile Card Game 2.0",
+  "description": "Premium 4-player Spades Call Break card game with Obsidian Gold luxury styling, offline bot play, and online multiplayer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
