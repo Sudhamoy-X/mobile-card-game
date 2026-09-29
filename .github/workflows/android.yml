@@ -21,6 +21,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
+          cache-dependency-path: |
+            android/**/*.gradle*
+            android/gradle/wrapper/gradle-wrapper.properties
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -31,6 +34,8 @@ jobs:
         run: |
           npm ci || npm install
           npm run build
+          mkdir -p android/app/src/main/assets
+          cp -r dist/* android/app/src/main/assets/ || true
 
       - name: Make Gradlew executable
         run: chmod +x android/gradlew
@@ -45,3 +50,4 @@ jobs:
           name: mobile-card-game-debug-apk
           path: android/app/build/outputs/apk/debug/*.apk
           retention-days: 14
+          if-no-files-found: error

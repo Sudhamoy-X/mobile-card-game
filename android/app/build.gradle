@@ -50,3 +50,16 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.webkit:webkit:1.10.0")
 }
+
+tasks.register("syncWebAssets") {
+    doLast {
+        def distDir = file("${rootDir}/../dist")
+        if (distDir.exists()) {
+            copy {
+                from(distDir)
+                into("${projectDir}/src/main/assets")
+            }
+        }
+    }
+}
+preBuild.dependsOn("syncWebAssets")

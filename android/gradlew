@@ -55,5 +55,11 @@ fi
 
 CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
 
+if [ ! -f "$CLASSPATH" ]; then
+    mkdir -p "$APP_HOME/gradle/wrapper"
+    echo "Downloading gradle-wrapper.jar..."
+    curl -L -s -o "$CLASSPATH" https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradle/wrapper/gradle-wrapper.jar || true
+fi
+
 # Execute Gradle
 exec "$JAVACMD" "-Dorg.gradle.appname=$APP_BASE_NAME" -classpath "$CLASSPATH" org.gradle.wrapper.GradleWrapperMain "$@"
