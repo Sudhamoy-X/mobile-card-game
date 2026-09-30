@@ -33,7 +33,9 @@ export default function App() {
   const [onlineRoomState, setOnlineRoomState] = useState<RoomState | null>(null);
   const [myOnlineSeatIndex, setMyOnlineSeatIndex] = useState<number>(0);
 
-  // Initialize theme and saved game check
+  // Initialize theme, saved game check, and landscape orientation
+  const [isPortrait, setIsPortrait] = useState(false);
+
   useEffect(() => {
     setHasSavedGame(LocalGameManager.hasSavedGame());
 
@@ -43,6 +45,38 @@ export default function App() {
     } else {
       document.documentElement.classList.add('theme-light');
     }
+
+    // Try locking orientation to landscape
+    const lockLandscape = async () => {
+      try {
+        if (window.screen?.orientation && 'lock' in window.screen.orientation) {
+          await (window.screen.orientation as any).lock('landscape');
+        }
+      } catch {
+        // Ignored if user gesture required
+      }
+    };
+    lockLandscape();
+
+    // Trigger Android bridge fullscreen if inside Android APK WebView
+    if (typeof window !== 'undefined' && window.AndroidInterface?.setFullscreen) {
+      window.AndroidInterface.setFullscreen(true);
+    }
+
+    // Monitor portrait vs landscape
+    const checkOrientation = () => {
+      if (typeof window !== 'undefined') {
+        const portrait = window.innerHeight > window.innerWidth && window.innerWidth < 768;
+        setIsPortrait(portrait);
+      }
+    };
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
   }, [isDarkMode]);
 
   // Connect to Socket.IO for online multiplayer
@@ -360,6 +394,33 @@ export default function App() {
           }}
           onClose={() => setShowAuthModal(false)}
         />
+      )}
+
+      {/* Landscape Orientation Prompt on Mobile */}
+      {isPortrait && (
+        <div className="fixed inset-0 z-50 bg-[#090a0f]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center animate-in fade-in">
+          <div className="w-16 h-16 rounded-2xl border-2 border-[#d4af37] bg-[#12151d] flex items-center justify-center mb-4 shadow-[0_0_25px_rgba(212,175,55,0.4)] animate-pulse">
+            <span className="text-3xl text-[#d4af37]">🔄</span>
+          </div>
+          <h2 className="text-xl font-bold font-serif text-[#f5cf68] tracking-wider mb-2">
+            Rotate to Landscape
+          </h2>
+          <p className="text-xs text-slate-300 max-w-xs mb-5">
+            Mobile Card Game 2.0 is designed exclusively for landscape gameplay. Please turn your phone sideways.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              try {
+                (window.screen?.orientation as any)?.lock('landscape').catch(() => {});
+              } catch {}
+              setIsPortrait(false);
+            }}
+            className="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-[#d4af37] to-[#aa771c] text-[#090a0f] hover:from-[#f5cf68] cursor-pointer shadow-lg"
+          >
+            Continue in Landscape
+          </button>
+        </div>
       )}
     </div>
   );

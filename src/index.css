@@ -86,3 +86,32 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Landscape Mode Optimization for Mobile Devices */
+@media (max-height: 520px) and (orientation: landscape) {
+  .landscape-compact-logo {
+    width: 3.5rem !important;
+    height: 3.5rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+  .landscape-compact-logo span {
+    font-size: 1.75rem !important;
+  }
+  .landscape-compact-title {
+    font-size: 1.5rem !important;
+    line-height: 1.75rem !important;
+    margin-bottom: 0.125rem !important;
+  }
+  .landscape-compact-sub {
+    font-size: 0.7rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  .landscape-compact-btn {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  .landscape-compact-p {
+    padding: 0.5rem 1rem !important;
+  }
+}
+

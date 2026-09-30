@@ -1,12 +1,17 @@
 package com.mobilecardgame
 
 import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.view.WindowManager
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -19,9 +24,17 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Lock screen orientation to Landscape
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+
+        // Prevent screen from turning off during gameplay
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         hideSystemUI()
 
         webView = WebView(this)
+        webView.setBackgroundColor(Color.parseColor("#090A0F"))
         setContentView(webView)
 
         val settings = webView.settings
@@ -30,16 +43,34 @@ class MainActivity : AppCompatActivity() {
         settings.databaseEnabled = true
         settings.mediaPlaybackRequiresUserGesture = false
         settings.allowFileAccess = true
+        settings.allowContentAccess = true
+        settings.loadWithOverviewMode = true
+        settings.useWideViewPort = true
         settings.cacheMode = WebSettings.LOAD_DEFAULT
 
-        webView.webViewClient = WebViewClient()
+        webView.webViewClient = object : WebViewClient() {
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                super.onReceivedError(view, request, error)
+                // Fallback to local bundled assets if server is unreachable
+                if (request?.isForMainFrame == true) {
+                    val fallbackUrl = "file:///android_asset/index.html"
+                    if (view?.url != fallbackUrl) {
+                        view?.loadUrl(fallbackUrl)
+                    }
+                }
+            }
+        }
         webView.webChromeClient = WebChromeClient()
 
         // Expose fullscreen control to web application
         webView.addJavascriptInterface(WebAppInterface(), "AndroidInterface")
 
         // Load production server or local fallback
-        val gameUrl = BuildConfig.SERVER_URL.ifEmpty { "http://10.0.2.2:3000" }
+        val gameUrl = BuildConfig.SERVER_URL.ifEmpty { "file:///android_asset/index.html" }
         webView.loadUrl(gameUrl)
     }
 
